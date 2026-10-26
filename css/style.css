@@ -33,7 +33,7 @@ body {
     4 ANIMACIONES CSS
    ========================================= */
 
-/* ANIMACIÓN 1: Entrada suave de las tarjetas desde abajo */
+/* ANIMACION 1: Entrada suave de las tarjetas desde abajo */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -45,7 +45,7 @@ body {
     }
 }
 
-/* ANIMACIÓN 2: Pulso luminoso para productos con DESCUENTO */
+/* ANIMACION 2: Pulso luminoso para productos con DESCUENTO */
 @keyframes pulseDiscount {
     0%, 100% {
         transform: scale(1);
@@ -57,13 +57,13 @@ body {
     }
 }
 
-/* ANIMACIÓN 3: Parpadeo del indicador de estado del servidor (Status Online) */
+/* ANIMACION 3: Parpadeo del indicador de estado del servidor  */
 @keyframes blinkStatus {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.25; }
 }
 
-/* ANIMACIÓN 4: Flotación suave para imágenes de categorías y productos */
+/* ANIMACION 4: Flotacion suave para imágenes de categorías y productos */
 @keyframes floatIcon {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
