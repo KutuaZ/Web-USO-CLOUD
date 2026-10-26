@@ -63,7 +63,7 @@ body {
     50% { opacity: 0.25; }
 }
 
-/* ANIMACION 4: Flotacion suave para imágenes de categorías y productos */
+/* ANIMACION 4: Flotacion suave para imagenes de categorías y productos */
 @keyframes floatIcon {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
