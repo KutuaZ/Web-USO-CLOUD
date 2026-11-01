@@ -276,9 +276,10 @@ footer {
 }
 
 /* =========================================
-    Formulario de inicio de sesión (login)
+    Formularios
    ========================================= */
 
+/* Estilos para el formulario de inicio de sesión*/
 .login-form {
     width: 100%;
     max-width: 450px;
@@ -287,6 +288,24 @@ footer {
     padding: 2rem;
     border-radius: var(--radius);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+ /* Estilos para el formulario de registro */
+.register-form {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    background-color: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* botones separacion */
+.botones {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 /* =========================================
