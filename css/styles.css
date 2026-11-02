@@ -22,6 +22,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
@@ -85,6 +89,11 @@ body {
     backdrop-filter: blur(8px);
 }
 
+.navbar > nav {
+    flex: 1;
+    margin-left: auto;
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -116,6 +125,7 @@ body {
 
 .nav-links {
     display: flex;
+    justify-content: flex-end;
     gap: 1.3rem;
     list-style: none;
     margin: 0;
@@ -133,6 +143,49 @@ body {
 
 .nav-links a:hover,
 .nav-links a.active {
+    color: var(--primary-color);
+    background-color: rgba(56, 189, 248, 0.1);
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-arrow {
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    min-width: 165px;
+    padding: 0.35rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+.logout-button:hover {
     color: var(--primary-color);
     background-color: rgba(56, 189, 248, 0.1);
 }
@@ -335,6 +388,15 @@ footer {
         flex-direction: column;
         gap: 1rem;
     }
+
+    .navbar > nav {
+        width: 100%;
+    }
+
+    .nav-links {
+        gap: 0.5rem;
+        justify-content: center;
+    }
 }
 
 /* Celulares (Maximo 600px): 1 columna */
@@ -347,9 +409,39 @@ footer {
     .nav-links {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 0.25rem;
+    }
+
+    .nav-links a {
+        display: inline-block;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.9rem;
     }
 
     .hero h1 {
         font-size: 1.8rem;
+    }
+
+    .container {
+        padding: 2rem 1rem;
+    }
+
+    .login-form,
+    .register-form {
+        padding: 1.25rem;
+    }
+
+    .botones {
+        flex-direction: column;
+    }
+
+    .botones button {
+        width: 100%;
+    }
+
+    .user-dropdown {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
