@@ -216,17 +216,10 @@ body {
     margin: 0 auto;
 }
 
-/* Grilla para las 4 categorías (en inicio) o 3 productos (en paginas internas) */
-.grid-categories {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-}
-
+/* Las columnas responsivas son gestionadas por las clases de Bootstrap. */
+.grid-categories,
 .grid-products {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    width: 100%;
 }
 
 /* =========================================
@@ -377,13 +370,8 @@ footer {
     MEDIA QUERIES (Responsividad)
    ========================================= */
 
-/* Tablets (Maximo 992px): 2 columnas */
+/* Ajustes de navegación para tablets */
 @media (max-width: 992px) {
-    .grid-categories,
-    .grid-products {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .navbar {
         flex-direction: column;
         gap: 1rem;
@@ -399,13 +387,8 @@ footer {
     }
 }
 
-/* Celulares (Maximo 600px): 1 columna */
+/* Ajustes de navegación y formularios para celulares */
 @media (max-width: 600px) {
-    .grid-categories,
-    .grid-products {
-        grid-template-columns: 1fr;
-    }
-
     .nav-links {
         flex-wrap: wrap;
         justify-content: center;
