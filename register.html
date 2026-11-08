@@ -92,6 +92,15 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="18" required>
+                    <div class="password-strength" id="register-password-strength" aria-live="polite">
+                        <div class="password-strength-label">Seguridad: <span>Weak</span></div>
+                        <div class="strength" data-bs-strength="weak">
+                            <div class="strength-segment active"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                        </div>
+                    </div>
                     <div class="invalid-feedback">
                         Usa entre 6 y 18 caracteres, incluyendo al menos un número y una letra mayúscula.
                     </div>

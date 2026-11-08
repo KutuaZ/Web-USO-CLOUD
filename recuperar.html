@@ -52,6 +52,15 @@
                 <div class="mb-3">
                     <label for="recovery-password" class="form-label">Nueva contraseña</label>
                     <input type="password" class="form-control" id="recovery-password" minlength="6" maxlength="18" required>
+                    <div class="password-strength" id="recovery-password-strength" aria-live="polite">
+                        <div class="password-strength-label">Seguridad: <span>Weak</span></div>
+                        <div class="strength" data-bs-strength="weak">
+                            <div class="strength-segment active"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                        </div>
+                    </div>
                     <div class="invalid-feedback">Usa entre 6 y 18 caracteres, con un número y una mayúscula.</div>
                 </div>
                 <div class="mb-3">

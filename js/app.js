@@ -30,9 +30,55 @@ function getRegisteredAccounts() {
     return JSON.parse(localStorage.getItem('usoCloudAccounts') || '[]');
 }
 
+function getCurrentAccount() {
+    const username = localStorage.getItem('usoCloudUsername');
+    const role = localStorage.getItem('usoCloudRole') || 'cliente';
+    const accounts = [...demoAccounts, ...getRegisteredAccounts()];
+    return accounts.find((account) => account.username === username) || { username, role };
+}
+
+function getSubscriptions() {
+    return JSON.parse(localStorage.getItem('usoCloudSubscriptions') || '{}');
+}
+
 function getPasswordOverrides() {
     return JSON.parse(localStorage.getItem('usoCloudPasswordOverrides') || '{}');
 }
+
+// Actualiza los cuatro segmentos visuales según la seguridad de una contraseña.
+function initializePasswordStrength(inputId, indicatorId) {
+    const input = document.getElementById(inputId);
+    const indicator = document.getElementById(indicatorId);
+    if (!input || !indicator) {
+        return;
+    }
+
+    const label = indicator.querySelector('.password-strength-label span');
+    const strength = indicator.querySelector('.strength');
+    const segments = indicator.querySelectorAll('.strength-segment');
+    const levels = ['weak', 'fair', 'good', 'strong'];
+    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+
+    input.addEventListener('input', () => {
+        const password = input.value;
+        const score = [
+            password.length >= 6,
+            /[0-9]/.test(password),
+            /[A-Z]/.test(password),
+            /[a-z]/.test(password) && /[^A-Za-z0-9]/.test(password)
+        ].filter(Boolean).length;
+        const level = Math.max(1, score);
+
+        strength.dataset.bsStrength = levels[level - 1];
+        label.textContent = labels[level - 1];
+        segments.forEach((segment, index) => {
+            segment.classList.toggle('active', index < level);
+        });
+    });
+}
+
+initializePasswordStrength('password', 'register-password-strength');
+initializePasswordStrength('recovery-password', 'recovery-password-strength');
 
 // Mostrar el usuario registrado y su menú en la navegación de todas las páginas.
 function renderUserNavigation() {
@@ -59,7 +105,7 @@ function renderUserNavigation() {
         const menu = document.createElement('div');
         menu.className = 'user-dropdown';
         menu.innerHTML = `
-            <a href="#" class="user-dropdown-link"><i class="bi bi-person"></i> Mi perfil</a>
+            <a href="perfil.html" class="user-dropdown-link"><i class="bi bi-person"></i> Mi perfil</a>
             <a href="#" class="user-dropdown-link"><i class="bi bi-ticket-detailed"></i> <span class="tickets-label">Tickets</span></a>
             <a href="#" class="user-dropdown-link"><i class="bi bi-grid"></i> <span class="control-panel-label">Panel Cloud</span></a>
             <button type="button" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
@@ -297,6 +343,79 @@ if (recoveryEmailForm && recoveryCodeForm && recoveryPasswordForm) {
         recoveryPasswordForm.classList.add('d-none');
         showRecoveryMessage('Contraseña cambiada correctamente. Ya puedes iniciar sesión.', 'success');
     });
+}
+
+// Funciones para manejar el checkout y la suscripción en el perfilS
+const checkoutForm = document.getElementById('checkout-form');
+const checkoutMessage = document.getElementById('checkout-message');
+const profileSubscription = document.getElementById('profile-subscription');
+
+function formatPrice(price) {
+    return price || 'Precio por confirmar';
+}
+
+if (checkoutForm) {
+    const params = new URLSearchParams(window.location.search);
+    const account = getCurrentAccount();
+    const plan = {
+        name: params.get('plan') || 'Plan cloud',
+        price: params.get('price') || '0',
+        category: params.get('category') || 'Servicio cloud',
+        description: params.get('description') || 'Servicio de infraestructura cloud.'
+    };
+
+    document.getElementById('checkout-plan').textContent = plan.name;
+    document.getElementById('checkout-category').textContent = plan.category;
+    document.getElementById('checkout-description').textContent = plan.description;
+    document.getElementById('checkout-price').textContent = formatPrice(plan.price);
+    document.getElementById('checkout-customer').textContent = account.username || 'Usuario no identificado';
+
+    checkoutForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!account.username) {
+            checkoutMessage.className = 'alert alert-danger mt-3';
+            checkoutMessage.textContent = 'Debes iniciar sesión antes de suscribirte a un plan.';
+            return;
+        }
+
+        const subscriptions = getSubscriptions();
+        subscriptions[account.email || account.username] = {
+            ...plan,
+            startedAt: new Date().toLocaleDateString('es-CL'),
+            status: 'Activa'
+        };
+        localStorage.setItem('usoCloudSubscriptions', JSON.stringify(subscriptions));
+        checkoutMessage.className = 'alert alert-success mt-3';
+        checkoutMessage.textContent = '¡Pago simulado exitoso! Recibirás más información sobre las funcionalidades en tu correo.';
+        window.setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1800);
+    });
+}
+
+if (profileSubscription) {
+    const account = getCurrentAccount();
+    const subscriptions = getSubscriptions();
+    const subscription = subscriptions[account.email || account.username];
+    document.getElementById('profile-username').textContent = account.username || 'No disponible';
+    document.getElementById('profile-email').textContent = account.email || 'No disponible';
+    document.getElementById('profile-role').textContent = account.role || 'cliente';
+
+    if (subscription) {
+        profileSubscription.innerHTML = `
+            <h2><i class="bi bi-cloud-check"></i> Suscripción activa</h2>
+            <h3>${subscription.name}</h3>
+            <p>${subscription.description}</p>
+            <span class="profile-plan-meta">${subscription.category} · ${subscription.price} · Desde ${subscription.startedAt}</span>
+            <p class="profile-next-step"><i class="bi bi-envelope-check"></i> Te enviaremos información de inicio y funcionalidades a tu correo.</p>
+        `;
+    } else {
+        profileSubscription.innerHTML = `
+            <h2><i class="bi bi-cloud"></i> Aún no tienes una suscripción</h2>
+            <p>Explora nuestros planes y encuentra la infraestructura ideal para tu proyecto.</p>
+            <a href="vps.html" class="btn">Explorar planes</a>
+        `;
+    }
 }
 
 if (loginForm) {

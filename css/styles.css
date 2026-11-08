@@ -263,6 +263,26 @@ body {
     margin-right: auto;
 }
 
+.homepage-cards .card > div:first-child {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.homepage-cards .card h3 {
+    min-height: 4rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.homepage-cards .card p {
+    min-height: 4.6rem;
+}
+
+.homepage-cards .card > .btn {
+    width: 100%;
+}
+
 .benefits-section {
     margin-top: 5rem;
     padding: 3rem 1.5rem;
@@ -574,6 +594,37 @@ footer {
     font-size: 1.35rem;
 }
 
+.password-strength {
+    margin-top: 0.65rem;
+}
+
+.password-strength-label {
+    margin-bottom: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.strength {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.strength-segment {
+    height: 0.35rem;
+    flex: 1;
+    background-color: var(--border-color);
+    border-radius: 999px;
+    transition: background-color 0.2s ease;
+}
+
+.strength-segment.active {
+    background-color: var(--primary-color);
+}
+
+.strength[data-bs-strength="strong"] .strength-segment.active {
+    background-color: var(--discount-color);
+}
+
 .recovery-form > form:not(:first-child) {
     margin-top: 1rem;
 }
@@ -629,6 +680,98 @@ footer {
 
 .demo-accounts small {
     color: var(--text-muted);
+}
+
+.checkout-layout,
+.profile-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.checkout-summary,
+.checkout-payment,
+.profile-card,
+.profile-subscription {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(21, 28, 44, 0.95), rgba(30, 41, 59, 0.65));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.checkout-summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.checkout-label {
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+}
+
+.checkout-summary h2,
+.checkout-payment h2,
+.profile-subscription h2 {
+    margin: 0.5rem 0 1rem;
+}
+
+.checkout-summary p,
+.checkout-payment > p,
+.profile-card p,
+.profile-subscription p {
+    color: var(--text-muted);
+}
+
+.checkout-summary strong {
+    margin-top: 1rem;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+}
+
+.checkout-customer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.checkout-payment #checkout-message {
+    margin-top: 1rem;
+}
+
+.profile-avatar {
+    display: grid;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: 1rem;
+    place-items: center;
+    color: var(--primary-color);
+    background-color: rgba(56, 189, 248, 0.12);
+    border-radius: 50%;
+    font-size: 2rem;
+}
+
+.profile-card h2 {
+    margin-bottom: 1rem;
+}
+
+.profile-plan-meta {
+    display: block;
+    margin: 1rem 0;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.profile-next-step {
+    padding: 1rem;
+    background-color: rgba(56, 189, 248, 0.08);
+    border-left: 3px solid var(--primary-color);
 }
 
 /* botones separacion */
@@ -691,6 +834,18 @@ footer {
 
     .container {
         padding: 2rem 1rem;
+    }
+
+    .checkout-layout,
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-summary,
+    .checkout-payment,
+    .profile-card,
+    .profile-subscription {
+        padding: 1.25rem;
     }
 
     .login-form,
