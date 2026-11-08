@@ -30,6 +30,10 @@ function getRegisteredAccounts() {
     return JSON.parse(localStorage.getItem('usoCloudAccounts') || '[]');
 }
 
+function getPasswordOverrides() {
+    return JSON.parse(localStorage.getItem('usoCloudPasswordOverrides') || '{}');
+}
+
 // Mostrar el usuario registrado y su menú en la navegación de todas las páginas.
 function renderUserNavigation() {
     const storedUsername = localStorage.getItem('usoCloudUsername');
@@ -135,16 +139,177 @@ function initializeCarouselEditor() {
 renderCarouselImages();
 initializeCarouselEditor();
 
+// Funciones para manejar la recuperación de contraseña
+const recoveryEmailForm = document.getElementById('recovery-email-form');
+const recoveryCodeForm = document.getElementById('recovery-code-form');
+const recoveryPasswordForm = document.getElementById('recovery-password-form');
+const recoveryMessage = document.getElementById('recovery-message');
+
+function showRecoveryMessage(text, type) {
+    recoveryMessage.className = `alert alert-${type} mt-3`;
+    recoveryMessage.textContent = text;
+}
+
+// Crea las casillas del código OTP y sincroniza sus dígitos para validarlos.
+function initializeOtpInput() {
+    const otp = document.querySelector('[data-bs-otp]');
+    const hiddenInput = document.getElementById('recovery-code');
+    if (!otp || !hiddenInput) {
+        return;
+    }
+
+    hiddenInput.classList.add('visually-hidden');
+    hiddenInput.tabIndex = -1;
+    const digitInputs = [];
+    for (let index = 0; index < 6; index += 1) {
+        const digitInput = document.createElement('input');
+        digitInput.type = 'text';
+        digitInput.className = 'otp-digit';
+        digitInput.maxLength = 1;
+        digitInput.inputMode = 'numeric';
+        digitInput.ariaLabel = `Dígito ${index + 1} del código`;
+        digitInputs.push(digitInput);
+        otp.appendChild(digitInput);
+        if (index === 2) {
+            const separator = document.createElement('span');
+            separator.className = 'otp-separator';
+            separator.textContent = '·';
+            separator.setAttribute('aria-hidden', 'true');
+            otp.appendChild(separator);
+        }
+    }
+
+    const updateCode = () => {
+        hiddenInput.value = digitInputs.map((input) => input.value).join('');
+    };
+
+    digitInputs.forEach((digitInput, index) => {
+        digitInput.addEventListener('input', () => {
+            digitInput.value = digitInput.value.replace(/\D/g, '');
+            updateCode();
+            if (digitInput.value && index < digitInputs.length - 1) {
+                digitInputs[index + 1].focus();
+            }
+        });
+        digitInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Backspace' && !digitInput.value && index > 0) {
+                digitInputs[index - 1].focus();
+            }
+        });
+        digitInput.addEventListener('paste', (event) => {
+            event.preventDefault();
+            const pastedCode = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+            pastedCode.split('').forEach((digit, digitIndex) => {
+                digitInputs[digitIndex].value = digit;
+            });
+            updateCode();
+            digitInputs[Math.min(pastedCode.length, 5)].focus();
+        });
+    });
+}
+
+initializeOtpInput();
+
+if (recoveryEmailForm && recoveryCodeForm && recoveryPasswordForm) {
+    let recoveryAccount;
+    let recoveryExpiresAt;
+    let recoveryTimer;
+
+    recoveryEmailForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const emailInput = document.getElementById('recovery-email');
+        const email = emailInput.value.trim().toLowerCase();
+        const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        emailInput.classList.toggle('is-invalid', !emailIsValid);
+        if (!emailIsValid) {
+            return;
+        }
+
+        recoveryAccount = [...demoAccounts, ...getRegisteredAccounts()].find((account) =>
+            account.email.toLowerCase() === email
+        );
+        if (!recoveryAccount) {
+            showRecoveryMessage('No encontramos una cuenta registrada con ese correo.', 'danger');
+            return;
+        }
+
+        recoveryExpiresAt = Date.now() + 120000;
+        recoveryCodeForm.classList.remove('d-none');
+        recoveryEmailForm.classList.add('d-none');
+        showRecoveryMessage('Código enviado. Recuerda que esta simulación acepta cualquier código de 6 dígitos.', 'info');
+
+        recoveryTimer = window.setInterval(() => {
+            const remaining = Math.max(0, recoveryExpiresAt - Date.now());
+            const seconds = Math.ceil(remaining / 1000);
+            document.getElementById('recovery-timer').textContent =
+                `Tiempo restante: ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+            if (remaining === 0) {
+                window.clearInterval(recoveryTimer);
+            }
+        }, 250);
+    });
+
+    recoveryCodeForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const codeInput = document.getElementById('recovery-code');
+        const codeIsValid = /^\d{6}$/.test(codeInput.value) && Date.now() < recoveryExpiresAt;
+        codeInput.classList.toggle('is-invalid', !codeIsValid);
+        if (!codeIsValid) {
+            showRecoveryMessage('El código debe tener 6 dígitos y no estar vencido.', 'danger');
+            return;
+        }
+
+        window.clearInterval(recoveryTimer);
+        recoveryCodeForm.classList.add('d-none');
+        recoveryPasswordForm.classList.remove('d-none');
+        showRecoveryMessage('Código aceptado. Ahora crea tu nueva contraseña.', 'success');
+    });
+
+    recoveryPasswordForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const passwordInput = document.getElementById('recovery-password');
+        const confirmInput = document.getElementById('recovery-confirm-password');
+        const passwordIsValid = passwordInput.value.length >= 6 &&
+            passwordInput.value.length <= 18 &&
+            /[0-9]/.test(passwordInput.value) &&
+            /[A-Z]/.test(passwordInput.value);
+        const passwordsMatch = passwordInput.value === confirmInput.value;
+        passwordInput.classList.toggle('is-invalid', !passwordIsValid);
+        confirmInput.classList.toggle('is-invalid', !passwordsMatch);
+        if (!passwordIsValid || !passwordsMatch) {
+            showRecoveryMessage('Revisa los requisitos de la nueva contraseña.', 'danger');
+            return;
+        }
+
+        const registeredAccounts = getRegisteredAccounts();
+        const accountIndex = registeredAccounts.findIndex((account) =>
+            account.email.toLowerCase() === recoveryAccount.email.toLowerCase()
+        );
+        if (accountIndex >= 0) {
+            registeredAccounts[accountIndex].password = passwordInput.value;
+            localStorage.setItem('usoCloudAccounts', JSON.stringify(registeredAccounts));
+        } else {
+            const passwordOverrides = getPasswordOverrides();
+            passwordOverrides[recoveryAccount.email] = passwordInput.value;
+            localStorage.setItem('usoCloudPasswordOverrides', JSON.stringify(passwordOverrides));
+        }
+
+        recoveryPasswordForm.classList.add('d-none');
+        showRecoveryMessage('Contraseña cambiada correctamente. Ya puedes iniciar sesión.', 'success');
+    });
+}
+
 if (loginForm) {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const identifier = loginForm.querySelector('#username').value.trim().toLowerCase();
         const password = loginForm.querySelector('#password').value;
+        const passwordOverrides = getPasswordOverrides();
         const account = [...demoAccounts, ...getRegisteredAccounts()].find((availableAccount) =>
             (availableAccount.email?.toLowerCase() === identifier ||
                 availableAccount.username.toLowerCase() === identifier) &&
-            availableAccount.password === password
+            (passwordOverrides[availableAccount.email] || availableAccount.password) === password
         );
 
         loginMessage.className = 'alert mt-3 ' + (account ? 'alert-success' : 'alert-danger');
