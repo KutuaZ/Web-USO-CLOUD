@@ -41,8 +41,58 @@
             <h1>Infraestructura Cloud y Operaciones para Pymes</h1>
             <p>En <strong>USO CLOUD</strong> garantizamos tu disponibilidad (Uptime), potenciamos tu infraestructura (Server) y automatizamos tu despliegue (Operaciones).</p> 
         </section>
+        <section class="row g-4 mb-5 carousel-section">
+        <div class="col-12">
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner rounded-5">
+                <div class="carousel-item active">
+                <img src="img/carousel1.jpg" class="d-block w-100" alt="Infraestructura cloud">
+                </div>
+                <div class="carousel-item">
+                <img src="img/carousel2.jpg" class="d-block w-100" alt="Servicios de bases de datos cloud">
+                </div>
+                <div class="carousel-item">
+                <img src="img/carousel3.jpg" class="d-block w-100" alt="Contenedores y Kubernetes">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+        </div>
+        </div>
+        </section>
 
-        <section class="row g-4 grid-categories">
+        <section id="carousel-editor" class="carousel-editor d-none">
+            <h2>Administrar imágenes del carrusel</h2>
+            <p>Selecciona una imagen para cada diapositiva. Los cambios se guardan en este navegador.</p>
+            <div class="row g-3">
+                <div class="col-12 col-md-4">
+                    <label for="carousel-image-1" class="form-label">Imagen 1</label>
+                    <input type="file" class="form-control carousel-image-input" id="carousel-image-1" accept="image/*" data-slide="0">
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="carousel-image-2" class="form-label">Imagen 2</label>
+                    <input type="file" class="form-control carousel-image-input" id="carousel-image-2" accept="image/*" data-slide="1">
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="carousel-image-3" class="form-label">Imagen 3</label>
+                    <input type="file" class="form-control carousel-image-input" id="carousel-image-3" accept="image/*" data-slide="2">
+                </div>
+            </div>
+            <button type="button" class="btn mt-3" id="reset-carousel-images">Restaurar imágenes originales</button>
+        </section>
+
+        <section class="row gx-4 gy-5 justify-content-center grid-categories homepage-cards">
 
             <!-- Categoria 1 -->
             <article class="col-12 col-md-6 col-lg-3">
@@ -92,6 +142,51 @@
                 </div>
             </article>
 
+        </section>
+
+        <section class="benefits-section">
+            <div class="benefits-header">
+                <h2>¿Por qué elegir USO CLOUD?</h2>
+                <p>Soluciones confiables para que tu negocio crezca con una infraestructura segura, rápida y siempre disponible.</p>
+            </div>
+            <div class="row g-4 benefits-grid">
+                <div class="col-12 col-md-6">
+                    <article class="benefit-card">
+                        <div class="benefit-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                        <div>
+                            <h3>Alto rendimiento</h3>
+                            <p>Recursos optimizados y almacenamiento NVMe para que tus aplicaciones respondan rápidamente.</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-md-6">
+                    <article class="benefit-card">
+                        <div class="benefit-icon"><i class="bi bi-shield-check"></i></div>
+                        <div>
+                            <h3>Seguridad integrada</h3>
+                            <p>Protegemos tus servicios con respaldos, monitoreo y herramientas de seguridad confiables.</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-md-6">
+                    <article class="benefit-card">
+                        <div class="benefit-icon"><i class="bi bi-clock-history"></i></div>
+                        <div>
+                            <h3>Alta disponibilidad</h3>
+                            <p>Mantenemos tu infraestructura activa para que tu negocio esté disponible cuando lo necesites.</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-md-6">
+                    <article class="benefit-card">
+                        <div class="benefit-icon"><i class="bi bi-headset"></i></div>
+                        <div>
+                            <h3>Soporte experto</h3>
+                            <p>Te acompañamos con experiencia técnica para encontrar la mejor solución para tu proyecto.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
         </section>
     </main>
 

@@ -12,10 +12,28 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirm-password');
 const mensaje = document.getElementById('mensaje');
+const loginForm = document.getElementById('login-form');
+const loginMessage = document.getElementById('login-message');
+
+const demoAccounts = [
+    { email: 'cliente@usocloud.demo', password: 'Cliente123!', username: 'Cliente', role: 'cliente' },
+    { email: 'soporte@usocloud.demo', password: 'Soporte123!', username: 'Soporte', role: 'soporte' },
+    { email: 'admin@usocloud.demo', password: 'Admin123!', username: 'Admin', role: 'admin' }
+];
+const originalCarouselImages = [
+    'img/carousel1.jpg',
+    'img/carousel2.jpg',
+    'img/carousel3.jpg'
+];
+
+function getRegisteredAccounts() {
+    return JSON.parse(localStorage.getItem('usoCloudAccounts') || '[]');
+}
 
 // Mostrar el usuario registrado y su menú en la navegación de todas las páginas.
 function renderUserNavigation() {
     const storedUsername = localStorage.getItem('usoCloudUsername');
+    const storedRole = localStorage.getItem('usoCloudRole') || 'cliente';
 
     document.querySelectorAll('.nav-login').forEach((loginLink) => {
         if (!storedUsername) {
@@ -30,11 +48,25 @@ function renderUserNavigation() {
         loginLink.href = '#';
         loginLink.setAttribute('aria-haspopup', 'true');
         loginLink.setAttribute('aria-expanded', 'false');
-        loginLink.innerHTML = `<i class="bi bi-person-circle"></i> ${storedUsername} <i class="bi bi-chevron-down user-menu-arrow"></i>`;
+        loginLink.innerHTML = '<i class="bi bi-person-circle"></i> <span class="user-name"></span> <span class="user-role"></span> <i class="bi bi-chevron-down user-menu-arrow"></i>';
+        loginLink.querySelector('.user-name').textContent = storedUsername;
+        loginLink.querySelector('.user-role').textContent = `(${storedRole})`;
 
         const menu = document.createElement('div');
         menu.className = 'user-dropdown';
-        menu.innerHTML = '<button type="button" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>';
+        menu.innerHTML = `
+            <a href="#" class="user-dropdown-link"><i class="bi bi-person"></i> Mi perfil</a>
+            <a href="#" class="user-dropdown-link"><i class="bi bi-ticket-detailed"></i> <span class="tickets-label">Tickets</span></a>
+            <a href="#" class="user-dropdown-link"><i class="bi bi-grid"></i> <span class="control-panel-label">Panel Cloud</span></a>
+            <button type="button" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+        `;
+        if (storedRole === 'soporte') {
+            menu.querySelector('.tickets-label').textContent = 'Panel de tickets';
+            menu.querySelector('.control-panel-label').textContent = 'Panel de control';
+        } else if (storedRole === 'admin') {
+            menu.querySelector('.tickets-label').textContent = 'Panel de tickets';
+            menu.querySelector('.control-panel-label').textContent = 'Panel de control';
+        }
         container.appendChild(menu);
 
         loginLink.addEventListener('click', (event) => {
@@ -45,12 +77,90 @@ function renderUserNavigation() {
 
         menu.querySelector('.logout-button').addEventListener('click', () => {
             localStorage.removeItem('usoCloudUsername');
+            localStorage.removeItem('usoCloudRole');
             window.location.href = 'login.html';
         });
     });
 }
 
 renderUserNavigation();
+
+// Funciones para manejar las imágenes del carrusel
+function getCarouselImages() {
+    return JSON.parse(localStorage.getItem('usoCloudCarouselImages') || 'null') || originalCarouselImages;
+}
+
+function renderCarouselImages() {
+    const carouselImages = getCarouselImages();
+    document.querySelectorAll('#carouselExampleInterval .carousel-item img').forEach((image, index) => {
+        if (carouselImages[index]) {
+            image.src = carouselImages[index];
+        }
+    });
+}
+
+function initializeCarouselEditor() {
+    const editor = document.getElementById('carousel-editor');
+    const storedRole = localStorage.getItem('usoCloudRole');
+    if (!editor || storedRole !== 'admin') {
+        return;
+    }
+
+    editor.classList.remove('d-none');
+    document.querySelectorAll('.carousel-image-input').forEach((input) => {
+        input.addEventListener('change', () => {
+            const file = input.files[0];
+            const slide = Number(input.dataset.slide);
+            if (!file || !file.type.startsWith('image/')) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                const carouselImages = getCarouselImages();
+                carouselImages[slide] = reader.result;
+                localStorage.setItem('usoCloudCarouselImages', JSON.stringify(carouselImages));
+                renderCarouselImages();
+            });
+            reader.readAsDataURL(file);
+        });
+    });
+
+    document.getElementById('reset-carousel-images').addEventListener('click', () => {
+        localStorage.removeItem('usoCloudCarouselImages');
+        renderCarouselImages();
+    });
+}
+
+renderCarouselImages();
+initializeCarouselEditor();
+
+if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const identifier = loginForm.querySelector('#username').value.trim().toLowerCase();
+        const password = loginForm.querySelector('#password').value;
+        const account = [...demoAccounts, ...getRegisteredAccounts()].find((availableAccount) =>
+            (availableAccount.email?.toLowerCase() === identifier ||
+                availableAccount.username.toLowerCase() === identifier) &&
+            availableAccount.password === password
+        );
+
+        loginMessage.className = 'alert mt-3 ' + (account ? 'alert-success' : 'alert-danger');
+        if (!account) {
+            loginMessage.textContent = 'Usuario o contraseña incorrectos.';
+            return;
+        }
+
+        localStorage.setItem('usoCloudUsername', account.username);
+        localStorage.setItem('usoCloudRole', account.role);
+        loginMessage.textContent = `Bienvenido, ${account.username}.`;
+        window.setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 500);
+    });
+}
 
 // Validar el formulario de registro
 if (!form) {
@@ -149,7 +259,27 @@ form.addEventListener('submit', function (event) {
         isPasswordValid && isConfirmPasswordValid;
     mensaje.className = "alert mt-4 " + (isFormValid ? 'alert-success' : 'alert-danger');
     if (isFormValid) {
+        const registeredAccounts = getRegisteredAccounts();
+        const accountExists = registeredAccounts.some((account) =>
+            account.username.toLowerCase() === username.toLowerCase() ||
+            account.email.toLowerCase() === email.toLowerCase()
+        );
+
+        if (accountExists) {
+            mensaje.className = 'alert alert-danger mt-4';
+            mensaje.textContent = 'Ese nombre de usuario o correo ya está registrado.';
+            return;
+        }
+
+        registeredAccounts.push({
+            username,
+            email,
+            password,
+            role: 'cliente'
+        });
+        localStorage.setItem('usoCloudAccounts', JSON.stringify(registeredAccounts));
         localStorage.setItem('usoCloudUsername', username);
+        localStorage.setItem('usoCloudRole', 'cliente');
         renderUserNavigation();
         mensaje.textContent = 'Formulario enviado correctamente.' + " " + '¡Bienvenido, ' + username + '!';
     } else {

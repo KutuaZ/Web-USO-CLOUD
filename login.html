@@ -43,9 +43,9 @@
 
         <!-- Formulario de inicio de sesión -->
         <section class="login-form">
-            <form action="index.html" method="POST">
+            <form id="login-form" action="index.html" method="POST">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Nombre de Usuario</label>
+                    <label for="username" class="form-label">Nombre de Usuario o correo</label>
                     <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="mb-3">
@@ -53,6 +53,13 @@
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                <div id="login-message" class="d-none mt-3" role="alert"></div>
+                <div class="demo-accounts mt-4">
+                    <strong>Accesos opcionales para la demostración</strong>
+                    <small>Cliente: cliente@usocloud.demo / Cliente123!</small>
+                    <small>Soporte: soporte@usocloud.demo / Soporte123!</small>
+                    <small>Admin: admin@usocloud.demo / Admin123!</small>
+                </div>
                 <div class="mt-3">
                     <a href="register.html">¿No tienes una cuenta? Regístrate aquí.</a>
                 </div>
