@@ -45,6 +45,14 @@ function getPasswordOverrides() {
     return JSON.parse(localStorage.getItem('usoCloudPasswordOverrides') || '{}');
 }
 
+// Valida que la contraseña cumpla con los requisitos de seguridad.
+function validatePassword(password) {
+    return password.length >= 6 &&
+        password.length <= 18 &&
+        /[0-9]/.test(password) &&
+        /[A-Z]/.test(password);
+}
+
 // Actualiza los cuatro segmentos visuales según la seguridad de una contraseña.
 function initializePasswordStrength(inputId, indicatorId) {
     const input = document.getElementById(inputId);
@@ -56,11 +64,20 @@ function initializePasswordStrength(inputId, indicatorId) {
     const label = indicator.querySelector('.password-strength-label span');
     const strength = indicator.querySelector('.strength');
     const segments = indicator.querySelectorAll('.strength-segment');
-    const levels = ['weak', 'fair', 'good', 'strong'];
-    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+    const levels = ['weak', 'regular', 'good', 'strong'];
+    const labels = ['Debil', 'Regular', 'Bueno', 'Fuerte'];
 
     input.addEventListener('input', () => {
         const password = input.value;
+        if (!password) {
+            indicator.classList.add('d-none');
+            label.textContent = '';
+            strength.removeAttribute('data-bs-strength');
+            segments.forEach((segment) => segment.classList.remove('active'));
+            return;
+        }
+
+        indicator.classList.remove('d-none');
         const score = [
             password.length >= 6,
             /[0-9]/.test(password),
@@ -79,6 +96,20 @@ function initializePasswordStrength(inputId, indicatorId) {
 
 initializePasswordStrength('password', 'register-password-strength');
 initializePasswordStrength('recovery-password', 'recovery-password-strength');
+
+if (fechaNacimientoInput && typeof flatpickr === 'function') {
+    flatpickr(fechaNacimientoInput, {
+        altInput: true,
+        altInputClass: 'form-control date-input',
+        altFormat: 'd/m/Y',
+        dateFormat: 'Y-m-d',
+        disableMobile: true,
+        locale: 'es',
+        monthSelectorType: 'dropdown',
+        maxDate: 'today',
+        allowInput: true
+    });
+}
 
 // Mostrar el usuario registrado y su menú en la navegación de todas las páginas.
 function renderUserNavigation() {
@@ -315,10 +346,7 @@ if (recoveryEmailForm && recoveryCodeForm && recoveryPasswordForm) {
         event.preventDefault();
         const passwordInput = document.getElementById('recovery-password');
         const confirmInput = document.getElementById('recovery-confirm-password');
-        const passwordIsValid = passwordInput.value.length >= 6 &&
-            passwordInput.value.length <= 18 &&
-            /[0-9]/.test(passwordInput.value) &&
-            /[A-Z]/.test(passwordInput.value);
+        const passwordIsValid = validatePassword(passwordInput.value);
         const passwordsMatch = passwordInput.value === confirmInput.value;
         passwordInput.classList.toggle('is-invalid', !passwordIsValid);
         confirmInput.classList.toggle('is-invalid', !passwordsMatch);
@@ -456,14 +484,6 @@ if (!form) {
         return re.test(email);
     }
 
-    // validar contraseña
-    function validatePassword(password) {
-        return password.length >= 6 &&
-            password.length <= 18 &&
-            /[0-9]/.test(password) &&
-            /[A-Z]/.test(password);
-    }
-
     function validateAdultDate(dateValue) {
         if (!dateValue) {
             return false;
@@ -516,6 +536,13 @@ form.addEventListener('submit', function (event) {
 
     fechaNacimientoInput.classList.toggle('is-valid', isFechaNacimientoValid);
     fechaNacimientoInput.classList.toggle('is-invalid', !isFechaNacimientoValid);
+    const dateInputWrapper = fechaNacimientoInput.parentElement;
+    dateInputWrapper.classList.toggle('is-valid', isFechaNacimientoValid);
+    dateInputWrapper.classList.toggle('is-invalid', !isFechaNacimientoValid);
+    if (fechaNacimientoInput._flatpickr) {
+        fechaNacimientoInput._flatpickr.altInput.classList.toggle('is-valid', isFechaNacimientoValid);
+        fechaNacimientoInput._flatpickr.altInput.classList.toggle('is-invalid', !isFechaNacimientoValid);
+    }
     fechaNacimientoInput.closest('.mb-3').querySelector('.invalid-feedback').textContent = isFechaNacimientoValid ? '' : 'Debes tener al menos 18 años y escribir una fecha válida.';
 
     telefonoInput.classList.toggle('is-valid', isTelefonoValid);
@@ -578,6 +605,10 @@ form.addEventListener('reset', function () {
     usernameInput.classList.remove('is-valid', 'is-invalid');
     nameInput.classList.remove('is-valid', 'is-invalid');
     fechaNacimientoInput.classList.remove('is-valid', 'is-invalid');
+    fechaNacimientoInput.parentElement.classList.remove('is-valid', 'is-invalid');
+    if (fechaNacimientoInput._flatpickr) {
+        fechaNacimientoInput._flatpickr.altInput.classList.remove('is-valid', 'is-invalid');
+    }
     telefonoInput.classList.remove('is-valid', 'is-invalid');
     direccionInput.classList.remove('is-valid', 'is-invalid');
     emailInput.classList.remove('is-valid', 'is-invalid');

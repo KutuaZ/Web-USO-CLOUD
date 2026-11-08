@@ -251,12 +251,6 @@ body {
     margin: 0 auto;
 }
 
-/* Las columnas responsivas son gestionadas por las clases de Bootstrap. */
-.grid-categories,
-.grid-products {
-    width: 100%;
-}
-
 .homepage-cards {
     max-width: 1140px;
     margin-left: auto;
@@ -557,10 +551,11 @@ footer {
     Formularios
    ========================================= */
 
-/* Estilos para el formulario de inicio de sesión*/
-.login-form {
+/* Estilos compartidos por los formularios */
+.login-form,
+.register-form,
+.recovery-form {
     width: 100%;
-    max-width: 450px;
     margin: 0 auto;
     background-color: var(--bg-card);
     padding: 2rem;
@@ -568,25 +563,35 @@ footer {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
- /* Estilos para el formulario de registro */
+.login-form,
 .register-form {
-    width: 100%;
     max-width: 450px;
-    margin: 0 auto;
-    background-color: var(--bg-card);
-    padding: 2rem;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .recovery-form {
-    width: 100%;
     max-width: 520px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: var(--bg-card);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.date-input-wrapper {
+    position: relative;
+}
+
+.date-input-wrapper .date-input {
+    padding-left: 2.5rem;
+}
+
+.date-input-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    z-index: 1;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.date-input-wrapper.is-invalid + .invalid-feedback {
+    display: block;
 }
 
 .recovery-form h2 {
