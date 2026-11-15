@@ -1,1 +1,24 @@
-<p>navbar works!</p>
+    <header class="navbar">
+        <a routerLink="/" class="brand">
+            <span class="status-dot" title="Sistemas 100 Opertativos"></span>
+            <div>
+                <span class="brand-title">USO CLOUD</span>
+                <span class="brand-subtitle">Uptime · Server · Operaciones</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a routerLink="/">Inicio</a></li>
+                <li><a routerLink="/vps">Servidores VPS</a></li>
+                <li><a routerLink="/bases-datos">Bases de Datos</a></li>
+                <li><a routerLink="/contenedores">Contenedores</a></li>
+                <li><a routerLink="/aiops">Ciberseguridad & AIOps</a></li>
+                <li>
+                    <a routerLink="/login" class="nav-login">
+                        <i class="bi bi-person-circle"></i> 
+                        Iniciar Sesión
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
