@@ -12,13 +12,14 @@ import { CommonModule } from '@angular/common';
 })
 export class App {
   mostrarNavbar = true;
-
+  mostrarFooter = true;
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
 
-        const rutasSinNavbar = ['/login', '/register', '/recuperar'];
+        const rutasSinNavbar = ['/login', '/recuperar', '/compra', '/perfil'];
         this.mostrarNavbar = !rutasSinNavbar.includes(event.urlAfterRedirects);
+        this.mostrarFooter = !rutasSinNavbar.includes(event.urlAfterRedirects);
       }
     });
   }

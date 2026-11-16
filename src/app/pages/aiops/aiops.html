@@ -1,1 +1,35 @@
-<p>aiops works!</p>
+<div class="container">
+    <section class="hero">
+        <h1>{{ titulo }}</h1>
+        <p>{{ subtitulo }}</p>
+    </section>
+
+    <section class="row g-4 grid-products">
+        <article class="col-12 col-md-6 col-lg-4" *ngFor="let prod of productos">
+            <div class="card h-100">
+                <div>
+                    <img [src]="prod.imagen" [alt]="prod.alt">
+                    <h3>{{ prod.nombre }}</h3>
+                    <p>{{ prod.descripcion }}</p>
+                </div>
+                <div>
+                    <div class="price-box">
+                        <span class="price">{{ prod.precio }}</span>
+                        <span class="badge-discount" *ngIf="prod.tieneDescuento">{{ prod.textoBadge }}</span>
+                        <span class="badge-normal" *ngIf="!prod.tieneDescuento">{{ prod.textoBadge }}</span>
+                    </div>
+                    <a [routerLink]="['/compra']"
+                       [queryParams]="{
+                         plan: prod.nombre,
+                         price: prod.precio,
+                         category: categoria,
+                         description: prod.descripcionCorta
+                       }"
+                       class="btn">
+                        Activar Protección
+                    </a>
+                </div>
+            </div>
+        </article>
+    </section>
+</div>

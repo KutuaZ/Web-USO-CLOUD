@@ -1,1 +1,53 @@
-<p>recuperar works!</p>
+    <main class="container">
+        <section class="hero">
+            <h1>Recuperar contraseña</h1>
+            <p>Completa los pasos para crear una nueva contraseña.</p>
+        </section>
+
+        <section class="recovery-form">
+            <form id="recovery-email-form">
+                <h2>1. Verificar correo</h2>
+                <div class="mb-3">
+                    <label for="recovery-email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="recovery-email" required>
+                    <div class="invalid-feedback">Escribe un correo electrónico válido.</div>
+                </div>
+                <button type="submit" class="btn">Enviar código</button>
+            </form>
+
+            <form id="recovery-code-form" class="d-none">
+                <h2>2. Código de verificación</h2>
+                <p class="recovery-help">Ingresa cualquier código de 6 dígitos. En esta simulación vencerá en 2 minutos.</p>
+                <div class="otp" data-bs-otp data-bs-groups="[3,3]">
+                    <input type="text" class="otp-input" id="recovery-code" maxlength="6" aria-label="Verification code" required>
+                </div>
+                <p id="recovery-timer" class="recovery-timer"></p>
+                <button type="submit" class="btn">Verificar código</button>
+            </form>
+
+            <form id="recovery-password-form" class="d-none">
+                <h2>3. Nueva contraseña</h2>
+                <div class="mb-3">
+                    <label for="recovery-password" class="form-label">Nueva contraseña</label>
+                    <input type="password" class="form-control" id="recovery-password" minlength="6" maxlength="18" required>
+                    <div class="password-strength d-none" id="recovery-password-strength" aria-live="polite">
+                        <div class="password-strength-label">Seguridad: <span></span></div>
+                        <div class="strength">
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                        </div>
+                    </div>
+                    <div class="invalid-feedback">Usa entre 6 y 18 caracteres, con un número y una mayúscula.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="recovery-confirm-password" class="form-label">Repetir contraseña</label>
+                    <input type="password" class="form-control" id="recovery-confirm-password" required>
+                    <div class="invalid-feedback">Las contraseñas deben coincidir.</div>
+                </div>
+                <button type="submit" class="btn">Cambiar contraseña</button>
+            </form>
+            <div id="recovery-message" class="d-none mt-3" role="alert"></div>
+        </section>
+    </main>
