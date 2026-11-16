@@ -6,14 +6,14 @@
 
         <!-- Formulario de inicio de sesión -->
         <section class="login-form">
-            <form id="login-form" action="index.html" method="POST">
+            <form id="login-form" (submit)="$event.preventDefault()">
                 <div class="mb-3">
                     <label for="username" class="form-label">Nombre de Usuario o correo</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+                    <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password">
                 </div>
                 <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                 <div id="login-message" class="d-none mt-3" role="alert"></div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 
 @Component({
   imports: [CommonModule, RouterLink],
@@ -10,8 +10,18 @@ import { RouterLink } from '@angular/router';
 })
 export class Navbar {
 
+  mostrarVolverInicio = false;
   menuServiciosAbierto = false;
   menuUsuarioAbierto = false;
+
+  constructor(private router: Router) {
+    this.mostrarVolverInicio = this.router.url !== '/';
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.mostrarVolverInicio = event.urlAfterRedirects !== '/';
+      }
+    });
+  }
 
   alternarServicios() {
     this.menuServiciosAbierto = !this.menuServiciosAbierto;

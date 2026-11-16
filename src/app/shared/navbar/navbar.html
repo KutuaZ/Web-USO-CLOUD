@@ -8,7 +8,13 @@
         </a>
         <nav>
             <ul class="nav-links">
-                <li><a routerLink="/">Inicio</a></li>
+                <li *ngIf="mostrarVolverInicio">
+                    <a routerLink="/">
+                        <i class="bi bi-arrow-left"></i>
+                        Volver al Inicio
+                    </a>
+                </li>
+                <li *ngIf="!mostrarVolverInicio"><a routerLink="/">Inicio</a></li>
                 <li><a routerLink="/vps">Servidores VPS</a></li>
                 <li><a routerLink="/bases-datos">Bases de Datos</a></li>
                 <li><a routerLink="/contenedores">Contenedores</a></li>

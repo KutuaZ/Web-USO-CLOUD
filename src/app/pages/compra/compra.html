@@ -1,28 +1,49 @@
-    <main class="container">
-        <section class="hero">
-            <h1>Confirma tu suscripción</h1>
-            <p>Revisa el resumen de tu plan antes de activar el servicio.</p>
-        </section>
-        <section class="checkout-layout">
-            <article class="checkout-summary">
-                <span class="checkout-label">Tu selección</span>
-                <h2 id="checkout-plan">Plan cloud</h2>
-                <p id="checkout-category"></p>
-                <p id="checkout-description"></p>
-                <strong id="checkout-price"></strong>
-                <div class="checkout-customer"><i class="bi bi-person-circle"></i> Cuenta: <span id="checkout-customer"></span></div>
-            </article>
-            <form id="checkout-form" class="checkout-payment">
-                <h2><i class="bi bi-credit-card"></i> Pago simulado</h2>
-                <p>Este formulario es una demostración. No se realizará ningún cobro real.</p>
-                <div class="mb-3"><label for="card-name" class="form-label">Nombre del titular</label><input id="card-name" class="form-control" required></div>
-                <div class="mb-3"><label for="card-number" class="form-label">Número de tarjeta</label><input id="card-number" class="form-control" inputmode="numeric" minlength="12" maxlength="19" placeholder="0000 0000 0000 0000" required></div>
-                <div class="row g-3">
-                    <div class="col-6"><label for="card-expiry" class="form-label">Vencimiento</label><input id="card-expiry" class="form-control" placeholder="MM/AA" required></div>
-                    <div class="col-6"><label for="card-cvv" class="form-label">CVV</label><input id="card-cvv" class="form-control" inputmode="numeric" minlength="3" maxlength="4" required></div>
+<div class="container">
+    <section class="hero">
+        <h1>Confirma tu suscripción</h1>
+        <p>Revisa el resumen de tu plan antes de activar el servicio.</p>
+    </section>
+
+    <section class="checkout-layout">
+        <!-- Resumen dinámico que cambia según el producto elegido -->
+        <article class="checkout-summary">
+            <span class="checkout-label">Tu selección</span>
+            <h2>{{ plan }}</h2>
+            <p>{{ category }}</p>
+            <p *ngIf="description">{{ description }}</p>
+            <strong>{{ price }}</strong>
+            <div class="checkout-customer">
+                <i class="bi bi-person-circle"></i> Cuenta: <span>{{ cuentaCliente }}</span>
+            </div>
+        </article>
+
+        <!-- Formulario solo visual con [(ngModel)] y sin validaciones -->
+        <form id="checkout-form" class="checkout-payment" (submit)="$event.preventDefault()">
+            <h2><i class="bi bi-credit-card"></i> Pago simulado</h2>
+            <p>Este formulario es una demostración. No se realizará ningún cobro real.</p>
+
+            <div class="mb-3">
+                <label for="card-name" class="form-label">Nombre del titular</label>
+                <input id="card-name" name="cardName" class="form-control" [(ngModel)]="nombreTitular">
+            </div>
+
+            <div class="mb-3">
+                <label for="card-number" class="form-label">Número de tarjeta</label>
+                <input id="card-number" name="cardNumber" class="form-control" inputmode="numeric" placeholder="0000 0000 0000 0000" [(ngModel)]="numeroTarjeta">
+            </div>
+
+            <div class="row g-3">
+                <div class="col-6">
+                    <label for="card-expiry" class="form-label">Vencimiento</label>
+                    <input id="card-expiry" name="cardExpiry" class="form-control" placeholder="MM/AA" [(ngModel)]="vencimiento">
                 </div>
-                <button type="submit" class="btn w-100 mt-4">Confirmar suscripción</button>
-                <div id="checkout-message" class="d-none" role="alert"></div>
-            </form>
-        </section>
-    </main>
+                <div class="col-6">
+                    <label for="card-cvv" class="form-label">CVV</label>
+                    <input id="card-cvv" name="cardCvv" class="form-control" inputmode="numeric" placeholder="123" [(ngModel)]="cvv">
+                </div>
+            </div>
+
+            <button type="submit" class="btn w-100 mt-4">Confirmar suscripción</button>
+        </form>
+    </section>
+</div>

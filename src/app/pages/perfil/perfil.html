@@ -1,12 +1,33 @@
-    <main class="container">
-        <section class="hero"><h1>Mi perfil</h1><p>Administra tus datos y revisa los servicios asociados a tu cuenta.</p></section>
-        <section class="profile-layout">
-            <article class="profile-card">
-                <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
-                <h2 id="profile-username">Usuario</h2>
-                <p><i class="bi bi-envelope"></i> <span id="profile-email">-</span></p>
-                <p><i class="bi bi-shield-check"></i> Rol: <span id="profile-role">cliente</span></p>
-            </article>
-            <article id="profile-subscription" class="profile-subscription"></article>
-        </section>
-    </main>
+<div class="container">
+    <section class="hero">
+        <h1>Mi perfil</h1>
+        <p>Administra tus datos y revisa los servicios asociados a tu cuenta.</p>
+    </section>
+
+    <section class="profile-layout">
+        <article class="profile-card">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <h2>{{ username }}</h2>
+            <p><i class="bi bi-envelope"></i> <span>{{ email }}</span></p>
+            <p><i class="bi bi-shield-check"></i> Rol: <span>{{ rol }}</span></p>
+        </article>
+
+        <article class="profile-subscription">
+            <h2>Servicios contratados</h2>
+
+            <div *ngIf="serviciosActivos.length > 0">
+                <div class="mb-3" *ngFor="let servicio of serviciosActivos">
+                    <h3>{{ servicio.nombre }}</h3>
+                    <p>{{ servicio.categoria }} · <strong>{{ servicio.precio }}</strong></p>
+                    <span class="badge-discount">{{ servicio.estado }}</span>
+                </div>
+                <a routerLink="/vps" class="btn mt-2">Explorar más planes</a>
+            </div>
+
+            <div *ngIf="serviciosActivos.length === 0">
+                <p>Aún no tienes servicios cloud activos en tu cuenta.</p>
+                <a routerLink="/vps" class="btn">Ver catálogo de servicios</a>
+            </div>
+        </article>
+    </section>
+</div>

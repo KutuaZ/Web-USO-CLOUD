@@ -1,53 +1,63 @@
-    <main class="container">
-        <section class="hero">
-            <h1>Recuperar contraseña</h1>
-            <p>Completa los pasos para crear una nueva contraseña.</p>
-        </section>
+<!-- Header minimalista solo con el logo para volver al inicio -->
+<header class="navbar">
+    <a routerLink="/" class="brand">
+        <span class="status-dot"></span>
+        <div>
+            <span class="brand-title">USO CLOUD</span>
+            <span class="brand-subtitle">Uptime · Server · Operaciones</span>
+        </div>
+    </a>
+</header>
 
-        <section class="recovery-form">
-            <form id="recovery-email-form">
-                <h2>1. Verificar correo</h2>
-                <div class="mb-3">
-                    <label for="recovery-email" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control" id="recovery-email" required>
-                    <div class="invalid-feedback">Escribe un correo electrónico válido.</div>
-                </div>
-                <button type="submit" class="btn">Enviar código</button>
-            </form>
+<div class="container">
+    <section class="hero">
+        <h1>Recuperar contraseña</h1>
+        <p>Completa los pasos para crear una nueva contraseña.</p>
+    </section>
 
-            <form id="recovery-code-form" class="d-none">
-                <h2>2. Código de verificación</h2>
-                <p class="recovery-help">Ingresa cualquier código de 6 dígitos. En esta simulación vencerá en 2 minutos.</p>
-                <div class="otp" data-bs-otp data-bs-groups="[3,3]">
-                    <input type="text" class="otp-input" id="recovery-code" maxlength="6" aria-label="Verification code" required>
-                </div>
-                <p id="recovery-timer" class="recovery-timer"></p>
-                <button type="submit" class="btn">Verificar código</button>
-            </form>
+    <section class="recovery-form">
+        <!-- Paso 1: Verificar correo -->
+        <form id="recovery-email-form" *ngIf="pasoActual === 1" (submit)="$event.preventDefault(); irAPaso(2)">
+            <h2>1. Verificar correo</h2>
+            <div class="mb-3">
+                <label for="recovery-email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="recovery-email" name="recoveryEmail" [(ngModel)]="correo">
+            </div>
+            <button type="submit" class="btn">Enviar código</button>
+        </form>
 
-            <form id="recovery-password-form" class="d-none">
-                <h2>3. Nueva contraseña</h2>
-                <div class="mb-3">
-                    <label for="recovery-password" class="form-label">Nueva contraseña</label>
-                    <input type="password" class="form-control" id="recovery-password" minlength="6" maxlength="18" required>
-                    <div class="password-strength d-none" id="recovery-password-strength" aria-live="polite">
-                        <div class="password-strength-label">Seguridad: <span></span></div>
-                        <div class="strength">
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                        </div>
+        <!-- Paso 2: Código de verificación -->
+        <form id="recovery-code-form" *ngIf="pasoActual === 2" (submit)="$event.preventDefault(); irAPaso(3)">
+            <h2>2. Código de verificación</h2>
+            <p class="recovery-help">Ingresa cualquier código de 6 dígitos. En esta simulación vencerá en 2 minutos.</p>
+            <div class="otp" data-bs-otp data-bs-groups="[3,3]">
+                <input type="text" class="otp-input" id="recovery-code" name="recoveryCode" aria-label="Verification code" [(ngModel)]="codigo">
+            </div>
+            <p id="recovery-timer" class="recovery-timer"></p>
+            <button type="submit" class="btn">Verificar código</button>
+        </form>
+
+        <!-- Paso 3: Nueva contraseña -->
+        <form id="recovery-password-form" *ngIf="pasoActual === 3" (submit)="$event.preventDefault()">
+            <h2>3. Nueva contraseña</h2>
+            <div class="mb-3">
+                <label for="recovery-password" class="form-label">Nueva contraseña</label>
+                <input type="password" class="form-control" id="recovery-password" name="recoveryPassword" [(ngModel)]="nuevaPassword">
+                <div class="password-strength" *ngIf="mostrarFuerzaPassword" aria-live="polite">
+                    <div class="password-strength-label">Seguridad: <span></span></div>
+                    <div class="strength">
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
                     </div>
-                    <div class="invalid-feedback">Usa entre 6 y 18 caracteres, con un número y una mayúscula.</div>
                 </div>
-                <div class="mb-3">
-                    <label for="recovery-confirm-password" class="form-label">Repetir contraseña</label>
-                    <input type="password" class="form-control" id="recovery-confirm-password" required>
-                    <div class="invalid-feedback">Las contraseñas deben coincidir.</div>
-                </div>
-                <button type="submit" class="btn">Cambiar contraseña</button>
-            </form>
-            <div id="recovery-message" class="d-none mt-3" role="alert"></div>
-        </section>
-    </main>
+            </div>
+            <div class="mb-3">
+                <label for="recovery-confirm-password" class="form-label">Repetir contraseña</label>
+                <input type="password" class="form-control" id="recovery-confirm-password" name="recoveryConfirmPassword" [(ngModel)]="confirmarPassword">
+            </div>
+            <button type="submit" class="btn">Cambiar contraseña</button>
+        </form>
+    </section>
+</div>

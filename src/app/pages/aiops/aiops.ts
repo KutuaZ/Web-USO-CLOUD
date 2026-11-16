@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ProductCard } from '../../shared/product-card/product-card';
 
 @Component({
   selector: 'app-aiops',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, ProductCard],
   templateUrl: './aiops.html',
   styleUrl: './aiops.css'
 })

@@ -1,0 +1,24 @@
+<div class="card h-100">
+    <div>
+        <img [src]="product.imagen" [alt]="product.alt">
+        <h3>{{ product.nombre }}</h3>
+        <p>{{ product.descripcion }}</p>
+    </div>
+    <div>
+        <div class="price-box">
+            <span class="price">{{ product.precio }}</span>
+            <span class="badge-discount" *ngIf="product.tieneDescuento">{{ product.textoBadge }}</span>
+            <span class="badge-normal" *ngIf="!product.tieneDescuento">{{ product.textoBadge }}</span>
+        </div>
+        <a [routerLink]="['/compra']"
+           [queryParams]="{
+             plan: product.nombre,
+             price: product.precio,
+             category: category,
+             description: product.descripcionCorta
+           }"
+           class="btn">
+            {{ buttonText }}
+        </a>
+    </div>
+</div>
